@@ -15,8 +15,9 @@ export default function Home() {
 
   return (
     <>
-      <div className="text-red-500">
-        hello
+      <div>
+        <p className="text-hello"> hello</p>
+
         <Button type="primary" onClick={showDrawer}>
           Button
         </Button>

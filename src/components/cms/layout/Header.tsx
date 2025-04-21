@@ -8,7 +8,7 @@ import { BellFilled } from "@ant-design/icons";
 export default function Header() {
   const [count, setCount] = useState<number>(5);
   return (
-    <div className="bg-[#fff] rounded-[16px] shadow-lg p-5 flex items-center justify-between">
+    <div className="bg-[#fff] rounded-[16px] p-5 flex items-center justify-between">
       <div className="flex items-center gap-5">
         <Image
           src="/images/menu-hide-icon.svg"
