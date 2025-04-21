@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+// import { Roboto } from "next/font/google";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import SideBar from "@/components/cms/layout/SideBar";
+import Header from "@/components/cms/layout/Header";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
+// import "@ant-design/v5-patch-for-react-19";
+import theme from "@/config/themeConfig";
+// const roboto = Roboto({
+//   weight: ["400", "500", "600", "700"], // Optional: choose weights you need
+//   subsets: ["latin"], // Optional: choose subsets
+//   display: "swap", // Optional: optimize for performance
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,8 +25,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      {/* <body className={roboto.className}> */}
+      <body>
+        <ConfigProvider theme={theme}>
+          <AntdRegistry>
+            <div className="bg-[#F8F9FA]">
+              <div className="p-[16px] flex gap-[16px]">
+                <div className="">
+                  <SideBar />
+                </div>
+
+                <main className="flex-1">
+                  <div className="flex flex-col  gap-[16px]">
+                    <Header />
+                    {children}
+                  </div>
+                </main>
+              </div>
+            </div>
+          </AntdRegistry>
+        </ConfigProvider>
       </body>
     </html>
   );
