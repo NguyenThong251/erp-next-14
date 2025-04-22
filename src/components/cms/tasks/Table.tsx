@@ -149,7 +149,7 @@ const columns: TableColumnsType<DataTasks> = [
           style: { color: "#f56a00", backgroundColor: "#fde3cf" },
         }}
       >
-        {members.map((member, index) => (
+        {members.map((member: string, index: number) => (
           <Avatar key={index} size={32} icon={<UserOutlined />} />
         ))}
       </Avatar.Group>

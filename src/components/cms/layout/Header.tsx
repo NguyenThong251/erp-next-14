@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { BellFilled } from "@ant-design/icons";
 // import CircleNotificationsRoundedIcon from "@mui/icons-material/CircleNotificationsRounded";
 export default function Header() {
-  const [count, setCount] = useState<number>(5);
+  const [count] = useState<number>(5);
   return (
     <div className="bg-[#fff] rounded-[16px] p-5 flex items-center justify-between">
       <div className="flex items-center gap-5">
