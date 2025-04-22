@@ -27,7 +27,7 @@ export default function TabBar() {
             >
               <div className="flex gap-1.5">
                 <h3
-                  className={`font-[600] text-[14px] ${
+                  className={`font-[500] text-[14px] ${
                     activeTab === tab.id ? "text-[#2275FF]" : "text-[#99A3B3]"
                   }`}
                 >
@@ -35,7 +35,7 @@ export default function TabBar() {
                 </h3>
                 {tab.count && (
                   <div
-                    className={`rounded-full text-white text-[14px] px-[5px] flex items-center justify-center ${
+                    className={`rounded-full text-white text-[12px] px-[5.5px] py-[3px] flex items-center justify-center ${
                       activeTab === tab.id ? "bg-[#2275FF]" : "bg-[#99A3B3]"
                     }`}
                   >

@@ -19,13 +19,6 @@ export default function Header() {
         <h3 className="text-[#344767] font-[700] text-[20px]">Công việc</h3>
       </div>
       <div className="flex gap-5 items-center">
-        {/* <Badge badgeContent={4} color="primary">
-          <CircleNotificationsRoundedIcon color="action" fontSize="large" />
-        </Badge>
-        <Avatar
-          src="https://randomuser.me/api/portraits/men/1.jpg"
-          sx={{ width: 38, height: 38 }}
-        /> */}
         <div className="">
           <Badge count={count}>
             <BellFilled className="text-[18px] p-2 bg-[#E9ECEF] rounded-full" />

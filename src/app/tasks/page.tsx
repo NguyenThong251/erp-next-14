@@ -15,7 +15,7 @@ export default function TasksPage() {
       <div className="bg-[#fff] p-5 rounded-[16px]  flex flex-col gap-4 ">
         <div className=" flex items-center justify-between ">
           <div className="flex justify-between items-center gap-5">
-            <div className="flex items-center gap-3 bg-[#F3F5F9] rounded-[10px] px-3 py-2">
+            <div className="flex items-center gap-3 bg-[#F3F5F9] rounded-[10px] px-3 py-2 h-[40px]">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="19"
@@ -30,7 +30,7 @@ export default function TasksPage() {
               </svg>
               <span className="text-[#A0AEC0] text-[14px] font-[400]">Lọc</span>
             </div>
-            <div className="w-[300px] flex items-center gap-3 border-1 rounded-[10px] border-[#E2E8F0]  px-3 py-2 ">
+            <div className="w-[300px] flex items-center gap-3 border-[1px] h-[40px] rounded-[10px] border-[#E2E8F0]  px-3 py-2 ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="17"
