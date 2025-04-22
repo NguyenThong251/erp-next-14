@@ -12,6 +12,15 @@ module.exports = {
     extend: {
       colors: {
         hello: "#2275FF",
+        textColor: "#344767",
+        blackGrey: "#64748B",
+        drakGrey: "#A0AEC0",
+        textBlue: "#2275FF",
+        Grey: "#EBEFF5",
+        secondError: "rgba(252, 88, 107, 0.40)",
+      },
+      boxShadow: {
+        "custom-soft": "0px 3.5px 5.5px 0px rgba(0, 0, 0, 0.02)",
       },
     },
   },

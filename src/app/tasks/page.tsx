@@ -2,6 +2,7 @@
 import TabBar from "@/components/cms/tasks/TabBar";
 import Table from "@/components/cms/tasks/Table";
 import React, { useState } from "react";
+import TaskDetail from "@/components/cms/tasks/TaskDetail";
 
 export default function TasksPage() {
   const [activeTab, setActiveTab] = useState<"Ngày" | "Tháng" | "Năm">("Ngày");
@@ -180,6 +181,7 @@ export default function TasksPage() {
         </div>
         <Table />
       </div>
+      <TaskDetail />
     </>
   );
 }

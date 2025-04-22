@@ -5,6 +5,7 @@ import type { TableColumnsType, TableProps } from "antd";
 import { DataTasks } from "@/types/tasks/tasks.interface";
 import { mockTasks } from "@/lib/data/TaskData";
 import { UserOutlined } from "@ant-design/icons";
+import { useTaskStore } from "@/stores/task";
 
 const columns: TableColumnsType<DataTasks> = [
   {
@@ -159,6 +160,7 @@ const columns: TableColumnsType<DataTasks> = [
 
 const TableComponent: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const { openDrawer } = useTaskStore();
 
   const onChange: TableProps<DataTasks>["onChange"] = (
     pagination,
@@ -180,6 +182,11 @@ const TableComponent: React.FC = () => {
     type: "checkbox" as const,
   };
 
+  const handleRowClick = (record: DataTasks) => {
+    const taskId = record.taskName;
+    openDrawer(taskId, record);
+  };
+
   return (
     <div>
       <Table<DataTasks>
@@ -193,6 +200,10 @@ const TableComponent: React.FC = () => {
           showTotal: (total) => `Tổng ${total}`,
         }}
         onChange={onChange}
+        onRow={(record) => ({
+          onClick: () => handleRowClick(record),
+          style: { cursor: 'pointer' }
+        })}
         className="bg-white rounded-lg shadow-sm"
       />
     </div>
