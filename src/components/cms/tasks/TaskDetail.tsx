@@ -5,11 +5,21 @@ import dayjs from "dayjs";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
+// Định nghĩa interface cho formData
+interface TaskFormData {
+  taskName?: string;
+  department?: string;
+  project?: string;
+  startDate?: dayjs.Dayjs | null;
+  dueDate?: dayjs.Dayjs | null;
+  status?: string;
+  condition?: string;
+  [key: string]: unknown;
+}
+
 export default function TaskDetail() {
-  const { isDrawerOpen, closeDrawer, selectedTask, selectedTaskId } =
-    useTaskStore();
-  const [formData, setFormData] = useState<any>({});
-  const [isSaving, setIsSaving] = useState(false);
+  const { isDrawerOpen, closeDrawer, selectedTask } = useTaskStore();
+  const [formData, setFormData] = useState<TaskFormData>({});
 
   // Initialize form data when component mounts or selectedTask changes
   useEffect(() => {
@@ -25,26 +35,24 @@ export default function TaskDetail() {
     }
   }, [selectedTask]);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
-  };
+  // const handleInputChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  // ) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev: any) => ({ ...prev, [name]: value }));
+  // };
 
-  const handleDateChange = (name: string, date: any) => {
-    setFormData((prev: any) => ({ ...prev, [name]: date }));
-  };
+  // const handleDateChange = (name: string, date: any) => {
+  //   setFormData((prev: any) => ({ ...prev, [name]: date }));
+  // };
 
-  const handleSave = () => {
-    setIsSaving(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Saving task:", formData);
-      setIsSaving(false);
-      closeDrawer();
-    }, 1000);
-  };
+  // const handleSave = () => {
+  //   // Simulate API call
+  //   setTimeout(() => {
+  //     console.log("Saving task:", formData);
+  //     closeDrawer();
+  //   }, 1000);
+  // };
 
   if (!selectedTask) return null;
 
@@ -100,7 +108,7 @@ export default function TaskDetail() {
                       viewBox="0 0 16 16"
                       fill="none"
                     >
-                      <g clip-path="url(#clip0_2251_7688)">
+                      <g clipPath="url(#clip0_2251_7688)">
                         <path
                           d="M10.75 0H15.25C15.6656 0 16 0.334375 16 0.75V5.25C16 5.55312 15.8188 5.82812 15.5375 5.94375C15.2563 6.05937 14.9344 5.99687 14.7188 5.78125L13.5 4.5625L10.7812 7.28125C10.4875 7.575 10.0125 7.575 9.72188 7.28125L8.72188 6.28125C8.42813 5.9875 8.42813 5.5125 8.72188 5.22188L11.4406 2.50312L10.2188 1.28125C10.0031 1.06562 9.94062 0.74375 10.0562 0.4625C10.1719 0.18125 10.4469 0 10.75 0ZM5.25 16H0.75C0.334375 16 0 15.6656 0 15.25V10.75C0 10.4469 0.18125 10.1719 0.4625 10.0562C0.74375 9.94062 1.06562 10.0031 1.28125 10.2188L2.5 11.4375L5.21875 8.71875C5.5125 8.425 5.9875 8.425 6.27812 8.71875L7.27812 9.71875C7.57187 10.0125 7.57187 10.4875 7.27812 10.7781L4.55937 13.4969L5.77812 14.7156C5.99375 14.9312 6.05625 15.2531 5.94063 15.5344C5.825 15.8156 5.55 15.9969 5.24687 15.9969L5.25 16Z"
                           fill="#A0AEC0"
@@ -143,7 +151,7 @@ export default function TaskDetail() {
                     viewBox="0 0 16 16"
                     fill="none"
                   >
-                    <g clip-path="url(#clip0_2251_7697)">
+                    <g clipPath="url(#clip0_2251_7697)">
                       <path
                         d="M15.4969 5.20625C15.5969 5.47813 15.5126 5.78125 15.2969 5.975L13.9438 7.20625C13.9782 7.46563 13.9969 7.73125 13.9969 8C13.9969 8.26875 13.9782 8.53438 13.9438 8.79375L15.2969 10.025C15.5126 10.2188 15.5969 10.5219 15.4969 10.7937C15.3594 11.1656 15.1938 11.5219 15.0032 11.8656L14.8563 12.1187C14.6501 12.4625 14.4188 12.7875 14.1657 13.0938C13.9813 13.3188 13.6751 13.3937 13.4001 13.3062L11.6594 12.7531C11.2407 13.075 10.7782 13.3438 10.2844 13.5469L9.89381 15.3313C9.83131 15.6156 9.61256 15.8406 9.32506 15.8875C8.89381 15.9594 8.45006 15.9969 7.99693 15.9969C7.54381 15.9969 7.10006 15.9594 6.66881 15.8875C6.38131 15.8406 6.16256 15.6156 6.10006 15.3313L5.70943 13.5469C5.21568 13.3438 4.75318 13.075 4.33443 12.7531L2.59693 13.3094C2.32193 13.3969 2.01568 13.3188 1.83131 13.0969C1.57818 12.7906 1.34693 12.4656 1.14068 12.1219L0.993807 11.8687C0.803182 11.525 0.637557 11.1687 0.500057 10.7969C0.400057 10.525 0.484432 10.2219 0.700057 10.0281L2.05318 8.79688C2.01881 8.53438 2.00006 8.26875 2.00006 8C2.00006 7.73125 2.01881 7.46563 2.05318 7.20625L0.700057 5.975C0.484432 5.78125 0.400057 5.47813 0.500057 5.20625C0.637557 4.83438 0.803182 4.47813 0.993807 4.13438L1.14068 3.88125C1.34693 3.5375 1.57818 3.2125 1.83131 2.90625C2.01568 2.68125 2.32193 2.60625 2.59693 2.69375L4.33756 3.24688C4.75631 2.925 5.21881 2.65625 5.71256 2.45312L6.10318 0.66875C6.16568 0.384375 6.38443 0.159375 6.67193 0.1125C7.10318 0.0375 7.54693 0 8.00006 0C8.45318 0 8.89693 0.0375 9.32818 0.109375C9.61568 0.15625 9.83443 0.38125 9.89693 0.665625L10.2876 2.45C10.7813 2.65313 11.2438 2.92188 11.6626 3.24375L13.4032 2.69062C13.6782 2.60312 13.9844 2.68125 14.1688 2.90313C14.4219 3.20938 14.6532 3.53437 14.8594 3.87812L15.0063 4.13125C15.1969 4.475 15.3626 4.83125 15.5001 5.20312L15.4969 5.20625ZM8.00006 10.5C8.6631 10.5 9.29898 10.2366 9.76782 9.76777C10.2367 9.29893 10.5001 8.66304 10.5001 8C10.5001 7.33696 10.2367 6.70107 9.76782 6.23223C9.29898 5.76339 8.6631 5.5 8.00006 5.5C7.33702 5.5 6.70113 5.76339 6.23229 6.23223C5.76345 6.70107 5.50006 7.33696 5.50006 8C5.50006 8.66304 5.76345 9.29893 6.23229 9.76777C6.70113 10.2366 7.33702 10.5 8.00006 10.5Z"
                         fill="#A0AEC0"
@@ -219,7 +227,7 @@ export default function TaskDetail() {
                           viewBox="0 0 10 12"
                           fill="none"
                         >
-                          <g clip-path="url(#clip0_2251_7717)">
+                          <g clipPath="url(#clip0_2251_7717)">
                             <path
                               d="M0.5 6L1.16797 0.65625C1.21484 0.28125 1.53359 0 1.91328 0H5.86484C6.21641 0 6.5 0.283594 6.5 0.635156C6.5 0.710156 6.48594 0.7875 6.46016 0.857812L5.375 3.75H8.63984C9.11328 3.75 9.5 4.13438 9.5 4.61016C9.5 4.78359 9.44844 4.95234 9.35 5.09531L4.84531 11.6812C4.70703 11.8828 4.47969 12.0023 4.23828 12.0023H4.17031C3.80234 12.0023 3.50234 11.7023 3.50234 11.3344C3.50234 11.2805 3.50938 11.2266 3.52344 11.1727L4.625 6.75H1.25C0.835156 6.75 0.5 6.41484 0.5 6Z"
                               fill="#F63A46"
@@ -247,7 +255,7 @@ export default function TaskDetail() {
                         viewBox="0 0 11 12"
                         fill="none"
                       >
-                        <g clip-path="url(#clip0_2251_7723)">
+                        <g clipPath="url(#clip0_2251_7723)">
                           <path
                             d="M2 0.75C2 0.335156 1.66484 0 1.25 0C0.835156 0 0.5 0.335156 0.5 0.75V1.5V8.625V11.25C0.5 11.6648 0.835156 12 1.25 12C1.66484 12 2 11.6648 2 11.25V8.25L3.50703 7.87266C4.47031 7.63125 5.48984 7.74375 6.37813 8.18672C7.41406 8.70469 8.61641 8.76797 9.69922 8.36016L10.5125 8.05547C10.8055 7.94531 11 7.66641 11 7.35234V1.54922C11 1.01016 10.4328 0.658594 9.95 0.9L9.725 1.0125C8.63984 1.55625 7.3625 1.55625 6.27734 1.0125C5.45469 0.6 4.51016 0.496875 3.61719 0.719531L2 1.125V0.75Z"
                             fill="#A0AEC0"
@@ -338,8 +346,8 @@ export default function TaskDetail() {
                               y2="8.70809"
                               gradientUnits="userSpaceOnUse"
                             >
-                              <stop stop-color="#FAB534" />
-                              <stop offset="1" stop-color="#F64F39" />
+                              <stop stopColor="#FAB534" />
+                              <stop offset="1" stopColor="#F64F39" />
                             </linearGradient>
                           </defs>
                         </svg>
@@ -348,186 +356,6 @@ export default function TaskDetail() {
                   </div>
                 </div>
               </div>
-
-              {/* <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Chi tiết công việc: {selectedTaskId}
-                </h2>
-                <button
-                  onClick={closeDrawer}
-                  className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div> */}
-
-              {/* <div className="h-[calc(100%-64px)] overflow-y-auto">
-                <div className="space-y-4">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Tên công việc
-                    </label>
-                    <input
-                      type="text"
-                      name="taskName"
-                      value={formData.taskName || ""}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Phòng ban
-                    </label>
-                    <input
-                      type="text"
-                      name="department"
-                      value={formData.department || ""}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Dự án / Nhóm
-                    </label>
-                    <input
-                      type="text"
-                      name="project"
-                      value={formData.project || ""}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Ngày bắt đầu
-                    </label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      value={
-                        formData.startDate
-                          ? dayjs(formData.startDate).format("YYYY-MM-DD")
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleDateChange("startDate", dayjs(e.target.value))
-                      }
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Hạn hoàn thành
-                    </label>
-                    <input
-                      type="date"
-                      name="dueDate"
-                      value={
-                        formData.dueDate
-                          ? dayjs(formData.dueDate).format("YYYY-MM-DD")
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleDateChange("dueDate", dayjs(e.target.value))
-                      }
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Trạng thái
-                    </label>
-                    <select
-                      name="status"
-                      value={formData.status || ""}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    >
-                      <option value="">Chọn trạng thái</option>
-                      <option value="Đang hoạt động">Đang hoạt động</option>
-                      <option value="Chờ duyệt">Chờ duyệt</option>
-                      <option value="Hoàn thành">Hoàn thành</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Tình trạng
-                    </label>
-                    <input
-                      type="text"
-                      name="condition"
-                      value={formData.condition || ""}
-                      onChange={handleInputChange}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white p-4">
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={closeDrawer}
-                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {isSaving ? (
-                      <span className="flex items-center">
-                        <svg
-                          className="mr-2 h-4 w-4 animate-spin"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Đang lưu...
-                      </span>
-                    ) : (
-                      "Lưu"
-                    )}
-                  </button>
-                </div>
-              </div> */}
             </div>
           </motion.div>
         </motion.div>
