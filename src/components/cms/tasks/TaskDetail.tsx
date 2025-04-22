@@ -4,6 +4,10 @@ import { useTaskStore } from "@/stores/task";
 import dayjs from "dayjs";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { Badge, Tabs, TabsProps } from "antd";
+import Progress from "./tabs/Progress";
+import Files from "./tabs/Files";
+import Comments from "./tabs/Comments";
 
 // Định nghĩa interface cho formData
 interface TaskFormData {
@@ -18,6 +22,51 @@ interface TaskFormData {
 }
 
 export default function TaskDetail() {
+  const [activeKey, setActiveKey] = useState("1");
+  const onChange = (key: string) => {
+    setActiveKey(key);
+    console.log(key);
+  };
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: <span>Tiến trình</span>,
+      children: <Progress />,
+    },
+    {
+      key: "2",
+      label: (
+        <span className="px-[8px] pt-[5px] pb-[8px] text-[14px] font-[400]">
+          Files{" "}
+          <Badge
+            count={2}
+            style={{
+              backgroundColor: activeKey === "2" ? "#1890ff" : "#d9d9d9", // Màu xanh khi active, xám khi không active
+              color: activeKey === "2" ? "#fff" : "#000", // Chữ trắng khi active, đen khi không active
+            }}
+          />
+        </span>
+      ),
+      children: <Files />,
+    },
+    {
+      key: "3",
+      label: (
+        <span>
+          Bình luận{" "}
+          <Badge
+            count={5}
+            style={{
+              backgroundColor: activeKey === "3" ? "#1890ff" : "#d9d9d9", // Màu xanh khi active, xám khi không active
+              color: activeKey === "3" ? "#fff" : "#000", // Chữ trắng khi active, đen khi không active
+            }}
+          />
+        </span>
+      ),
+      children: <Comments />,
+    },
+  ];
   const { isDrawerOpen, closeDrawer, selectedTask } = useTaskStore();
   const [formData, setFormData] = useState<TaskFormData>({});
 
@@ -353,8 +402,129 @@ export default function TaskDetail() {
                         </svg>
                       </div>
                     </button>
+                    <div className="w-[1px] h-[20px] bg-Grey"></div>
+                    <button className="flex items-center gap-[10px] px-[10px] rounded-[20px] bg-[#E7F3FF] py-[5px]">
+                      <div className="">
+                        <Image
+                          src="/images/avt.svg"
+                          width={20}
+                          height={20}
+                          alt="avt"
+                        />
+                      </div>
+                      <div className="flex items-center gap-[5px]">
+                        <span className="text-[14px] font-[400]  text-textColor">
+                          Bá Dương
+                        </span>
+                      </div>
+                    </button>
+                    <button className="flex items-center gap-[10px] px-[10px] rounded-[20px] bg-[#E7F3FF] py-[5px]">
+                      <div className="">
+                        <Image
+                          src="/images/avt.svg"
+                          width={20}
+                          height={20}
+                          alt="avt"
+                        />
+                      </div>
+                      <div className="flex items-center gap-[5px]">
+                        <span className="text-[14px] font-[400]  text-textColor">
+                          Bá Dương
+                        </span>
+                      </div>
+                    </button>
+                    <div className="flex items-center justify-center w-[30px] h-[30px] rounded-[20px] bg-Grey">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="13"
+                        height="14"
+                        viewBox="0 0 13 14"
+                        fill="none"
+                      >
+                        <path
+                          d="M5.45349 1.89116C5.45349 1.33116 5.90745 0.877197 6.46745 0.877197C7.02745 0.877197 7.48142 1.33116 7.48142 1.89116V12.1088C7.48142 12.6688 7.02745 13.1228 6.46745 13.1228C5.90745 13.1228 5.45349 12.6688 5.45349 12.1088V1.89116Z"
+                          fill="#A0AEC0"
+                        />
+                        <path
+                          d="M0.305664 7.03898C0.305664 6.47899 0.759632 6.02502 1.31963 6.02502H11.5373C12.0973 6.02502 12.5512 6.47899 12.5512 7.03898C12.5512 7.59898 12.0973 8.05295 11.5373 8.05295H1.31963C0.759631 8.05295 0.305664 7.59898 0.305664 7.03898Z"
+                          fill="#A0AEC0"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
+
+                <div className="flex items-center">
+                  <span className="w-[150px] text-[14px] font-[400] text-drakGrey text-base/[14px]">
+                    Hạn hoàn thành
+                  </span>
+                  <div className="flex items-center gap-[10px]">
+                    <div className="flex items-center gap-1">
+                      <span className="text-[14px] font-[400] text-textColor">
+                        29-10-2023
+                      </span>
+                      <span className="text-[14px] font-[400] text-drakGrey">
+                        (Tổng: 10 ngày 5 giờ)
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-center w-[30px] h-[30px] rounded-[20px] bg-Grey">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                      >
+                        <path
+                          d="M5.03125 0.65625C5.03125 0.292578 4.73867 0 4.375 0C4.01133 0 3.71875 0.292578 3.71875 0.65625V1.75H2.625C1.65977 1.75 0.875 2.53477 0.875 3.5V3.9375V5.25V12.25C0.875 13.2152 1.65977 14 2.625 14H11.375C12.3402 14 13.125 13.2152 13.125 12.25V5.25V3.9375V3.5C13.125 2.53477 12.3402 1.75 11.375 1.75H10.2812V0.65625C10.2812 0.292578 9.98867 0 9.625 0C9.26133 0 8.96875 0.292578 8.96875 0.65625V1.75H5.03125V0.65625ZM2.1875 5.25H11.8125V12.25C11.8125 12.4906 11.6156 12.6875 11.375 12.6875H2.625C2.38437 12.6875 2.1875 12.4906 2.1875 12.25V5.25Z"
+                          fill="#A0AEC0"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="w-[150px] text-[14px] font-[400] text-drakGrey text-base/[14px]">
+                    Tình trạng
+                  </span>
+                  <button className="text-[#FFF] bg-drakGrey text-[14px] px-[12px] py-[6px] flex items-center justify-center rounded-[8px]">
+                    Chưa xong còn hạng
+                  </button>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="w-[150px] text-[14px] font-[400] text-drakGrey text-base/[14px]">
+                    Người giao việc
+                  </span>
+                  <button className="flex items-center gap-[10px] px-[10px] rounded-[20px] bg-[#E7F3FF] py-[5px]">
+                    <div className="">
+                      <Image
+                        src="/images/avt.svg"
+                        width={20}
+                        height={20}
+                        alt="avt"
+                      />
+                    </div>
+                    <div className="flex items-center gap-[5px]">
+                      <span className="text-[14px] font-[400]  text-textColor">
+                        Bá Dương
+                      </span>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-[15px]">
+                  <span className="w-[150px] text-[14px] font-[600] text-textColor text-base/[14px]">
+                    Mô tả công việc
+                  </span>
+                  <input
+                    placeholder="Nhập mô tả"
+                    type="textarea"
+                    className="w-full p-[15px] bg-[#F3F5F9] focus:outline-none focus:border-none h-[100px] text-textColor text-[14px] font-[400] flex flex-col items-start rounded-[16px]"
+                  />
+                </div>
+                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
               </div>
             </div>
           </motion.div>
