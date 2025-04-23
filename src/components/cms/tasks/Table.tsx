@@ -188,23 +188,24 @@ const TableComponent: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className=" overflow-y-hidden overscroll-y-none [&_.ant-table-thead]:sticky [&_.ant-table-thead]:top-0 [&_.ant-table-thead]:z-10 [&_.ant-table-thead]:bg-white [&_.ant-table]:w-full [&_.ant-table]:min-w-[800px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <Table<DataTasks>
         rowSelection={rowSelection}
         columns={columns}
         dataSource={mockTasks}
         pagination={{
           total: mockTasks.length,
-          pageSize: 8,
+          pageSize: 10,
           showSizeChanger: false,
           showTotal: (total) => `Tổng ${total}`,
         }}
         onChange={onChange}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
-          style: { cursor: 'pointer' }
+          style: { cursor: "pointer" },
         })}
         className="bg-white rounded-lg shadow-sm"
+        scroll={{ x: "max-content", y: "calc(100vh - 500px)" }}
       />
     </div>
   );

@@ -1,13 +1,10 @@
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import SideBar from "@/components/cms/layout/SideBar";
-import Header from "@/components/cms/layout/Header";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ConfigProvider } from "antd";
-// import "@ant-design/v5-patch-for-react-19";
+import LayoutBase from "@/components/cms/layout/LayoutBase";
 import theme from "@/config/themeConfig";
-import AnimatedContent from "@/components/cms/layout/AnimatedContent";
 const roboto = Roboto({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
@@ -25,26 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <body className={roboto.className}> */}
-      <body className={roboto.className}>
-        <ConfigProvider theme={theme}>
-          <AntdRegistry>
-            <div className="bg-[#F8F9FA]">
-              <div className="p-[16px] flex gap-[16px]">
-                <SideBar />
-
-                <main className="flex-1">
-                  <div className="flex flex-col gap-[16px]">
-                    <Header />
-                    <div className="mt-[20px">
-                      <AnimatedContent>{children}</AnimatedContent>
-                    </div>
-                  </div>
-                </main>
-              </div>
-            </div>
-          </AntdRegistry>
-        </ConfigProvider>
+      <body className={roboto.className + " bg-[#F8F9FA]"}>
+        <div className="m-4">
+          <ConfigProvider theme={theme}>
+            <AntdRegistry>
+              <LayoutBase>{children}</LayoutBase>
+            </AntdRegistry>
+          </ConfigProvider>
+        </div>
       </body>
     </html>
   );

@@ -1,9 +1,13 @@
 import Image from "next/image";
 
-export default function Logo() {
+interface LogoProps {
+  collapsed: boolean;
+}
+export default function Logo({ collapsed }: LogoProps) {
   return (
     <>
-      <div className="flex items-center gap-4 pt-[24px] px-[38px] pb-[16px]">
+      {/* <div className="flex items-center gap-4 pt-[24px] px-[38px] pb-[16px]"> */}
+      <div className="flex items-center justify-center gap-4 pt-[24px] pb-[16px] border-b border-[#E9ECEF]">
         {/* <Dashboard sx={{ fontSize: 28, color: "#3B82F6", mr: 1 }} /> */}
 
         <Image
@@ -12,9 +16,15 @@ export default function Logo() {
           width={40}
           height={40}
         />
-        <h3 className="text-[#344767] font-[600] text-[16px">ERP Quốc Duy</h3>
+        <h3
+          className={`text-[#344767] font-[600] text-[16px] transition-all duration-300 ${
+            collapsed ? "hidden" : "block"
+          }`}
+        >
+          ERP Quốc Duy
+        </h3>
       </div>
-      <svg
+      {/* <svg
         xmlns="http://www.w3.org/2000/svg"
         width="234"
         height="2"
@@ -36,7 +46,7 @@ export default function Logo() {
             <stop offset="1" stopColor="#E0E1E2" stopOpacity="0.15625" />
           </linearGradient>
         </defs>
-      </svg>
+      </svg> */}
     </>
   );
 }
