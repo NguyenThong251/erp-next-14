@@ -1,32 +1,25 @@
 "use client";
-import { Button, Drawer } from "antd";
+import { App, Button, Drawer, Modal, Space } from "antd";
 import { useState } from "react";
 
 export default function Home() {
-  const [open, setOpen] = useState<boolean>(false);
+  const { modal } = App.useApp();
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
+  const showModal = () => {
+    modal.info({
+      title: "This is a warning message",
+      content: "some messages...some messages...",
+      transitionName: "app-slide-left",
+    });
   };
 
   return (
     <>
-      <div>
-        <p className="text-hello"> hello</p>
-
-        <Button type="primary" onClick={showDrawer}>
-          Button
+      <Space wrap>
+        <Button type="primary" onClick={showModal}>
+          Open modal
         </Button>
-        <Drawer title="Basic Drawer" onClose={onClose} open={open}>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Drawer>
-      </div>
+      </Space>
     </>
   );
 }

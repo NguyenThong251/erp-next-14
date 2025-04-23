@@ -1,0 +1,20 @@
+// app/styles/global.scss
+
+@use "./modal-animations.scss" as *;
+
+// Additional global styles (if needed)
+.right-aligned-modal .ant-modal {
+  margin: 0 !important;
+  padding: 0 !important;
+  position: fixed;
+  right: 0;
+  top: 16px;
+  bottom: 16px;
+  transform: translateX(0);
+}
+
+.right-aligned-modal .ant-modal-content {
+  height: calc(100vh - 32px); // Adjust for top and bottom spacing
+  overflow-y: auto;
+  border-radius: 8px 0 0 8px; // Rounded corners on left side
+}

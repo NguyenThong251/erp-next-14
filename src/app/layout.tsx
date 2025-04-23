@@ -1,5 +1,5 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { ConfigProvider } from "antd";
+import { App, ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
@@ -26,7 +26,9 @@ export default function RootLayout({
         <div className="m-4">
           <ConfigProvider theme={theme}>
             <AntdRegistry>
-              <LayoutBase>{children}</LayoutBase>
+              <App>
+                <LayoutBase>{children}</LayoutBase>
+              </App>
             </AntdRegistry>
           </ConfigProvider>
         </div>

@@ -1,0 +1,163 @@
+// app/styles/modal-animations.scss
+
+// Slide Left Animation
+.app-slide-left {
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+  
+    // Appear and Enter states
+    &.app-slide-left-appear,
+    &.app-slide-left-enter {
+      animation-name: slideLeftEnter;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateX(100%); // Start off-screen to the right
+    }
+  
+    &.app-slide-left-appear.app-slide-left-appear-active,
+    &.app-slide-left-enter.app-slide-left-enter-active {
+      animation-name: slideLeftEnter;
+      animation-play-state: running;
+    }
+  
+    // Leave state
+    &.app-slide-left-leave {
+      animation-name: slideLeftLeave;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateX(0); // Start at visible position
+    }
+  
+    &.app-slide-left-leave.app-slide-left-leave-active {
+      animation-name: slideLeftLeave;
+      animation-play-state: running;
+    }
+  
+    @keyframes slideLeftEnter {
+      0% {
+        transform: translateX(100%); // Start off-screen to the right
+      }
+      100% {
+        transform: translateX(0); // Slide to visible position
+      }
+    }
+  
+    @keyframes slideLeftLeave {
+      0% {
+        transform: translateX(0); // Start at visible position
+      }
+      100% {
+        transform: translateX(100%); // Slide off-screen to the right
+      }
+    }
+  }
+  
+  // Template for Other Animations (e.g., Slide Right)
+  .app-slide-right {
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+  
+    &.app-slide-right-appear,
+    &.app-slide-right-enter {
+      animation-name: slideRightEnter;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateX(-100%); // Start off-screen to the left
+    }
+  
+    &.app-slide-right-appear.app-slide-right-appear-active,
+    &.app-slide-right-enter.app-slide-right-enter-active {
+      animation-name: slideRightEnter;
+      animation-play-state: running;
+    }
+  
+    &.app-slide-right-leave {
+      animation-name: slideRightLeave;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateX(0);
+    }
+  
+    &.app-slide-right-leave.app-slide-right-leave-active {
+      animation-name: slideRightLeave;
+      animation-play-state: running;
+    }
+  
+    @keyframes slideRightEnter {
+      0% {
+        transform: translateX(-100%); // Start off-screen to the left
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+  
+    @keyframes slideRightLeave {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%); // Slide off-screen to the left
+      }
+    }
+  }
+  
+  // Template for Slide Up Animation
+  .app-slide-up {
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+  
+    &.app-slide-up-appear,
+    &.app-slide-up-enter {
+      animation-name: slideUpEnter;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateY(100%); // Start off-screen at the bottom
+    }
+  
+    &.app-slide-up-appear.app-slide-up-appear-active,
+    &.app-slide-up-enter.app-slide-up-enter-active {
+      animation-name: slideUpEnter;
+      animation-play-state: running;
+    }
+  
+    &.app-slide-up-leave {
+      animation-name: slideUpLeave;
+      animation-play-state: paused;
+      animation-fill-mode: both;
+      transform: translateY(0);
+    }
+  
+    &.app-slide-up-leave.app-slide-up-leave-active {
+      animation-name: slideUpLeave;
+      animation-play-state: running;
+    }
+  
+    @keyframes slideUpEnter {
+      0% {
+        transform: translateY(100%); // Start off-screen at the bottom
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+  
+    @keyframes slideUpLeave {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(100%); // Slide off-screen to the bottom
+      }
+    }
+  }
+  
+  // Ensure modal content doesn't clip during animation
+  .ant-modal {
+    overflow: visible !important;
+  }
+  
+  .ant-modal-content {
+    overflow-y: auto;
+    max-height: calc(100vh - 32px); // Adjust for top/bottom spacing
+  }

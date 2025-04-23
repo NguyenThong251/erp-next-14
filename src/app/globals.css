@@ -41,3 +41,84 @@
 .anticon-menu-unfold {
   font-size: 18px !important;
 }
+
+/*  */
+/* .app-slide-left {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+
+.app-slide-left-appear,
+.app-slide-left-enter {
+  animation-name: enter;
+  animation-play-state: paused;
+  animation-fill-mode: both;
+}
+
+.app-slide-left-appear.app-slide-left-appear-active,
+.app-slide-left-enter.app-slide-left-enter-active {
+  animation-name: enter;
+  animation-play-state: running;
+}
+
+.app-slide-left-leave {
+  animation-name: leave;
+  animation-play-state: paused;
+  animation-fill-mode: both;
+}
+
+.app-slide-left-leave-active {
+  animation-name: leave;
+  animation-play-state: running;
+}
+
+@keyframes enter {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes leave {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+} */
+/* app/styles/animations.css */
+/* --- Khi Modal mở (enter) --- */
+.app-slide-left-enter {
+  transform: translateX(100%);
+}
+.app-slide-left-enter-active {
+  animation: enter 0.3s ease-out forwards;
+}
+
+.app-slide-left-leave {
+  transform: translateX(0%);
+}
+.app-slide-left-leave-active {
+  animation: leave 0.3s ease-in forwards;
+}
+
+@keyframes enter {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes leave {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
