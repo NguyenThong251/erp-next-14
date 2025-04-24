@@ -19,6 +19,7 @@ export default function TaskDetail({ onClose }: { onClose: () => void }) {
       className: "custom-modal-height",
       footer: null,
       icon: null,
+
       centered: false,
       style: {
         top: 24,

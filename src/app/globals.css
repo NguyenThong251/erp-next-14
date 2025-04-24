@@ -6,7 +6,9 @@
   --background: #af4848;
   --foreground: #171717;
 }
-
+.get-shadow-card {
+  box-shadow: 0.2px 0.1px 1px 0px rgba(255, 255, 255, 0.6) inset;
+}
 .ant-pagination-total-text {
   border-radius: 10px !important;
   background: #f3f5f9 !important;
@@ -41,56 +43,6 @@
 .anticon-menu-unfold {
   font-size: 18px !important;
 }
-
-/*  */
-/* .app-slide-left {
-  animation-duration: 0.2s;
-  animation-fill-mode: both;
-}
-
-.app-slide-left-appear,
-.app-slide-left-enter {
-  animation-name: enter;
-  animation-play-state: paused;
-  animation-fill-mode: both;
-}
-
-.app-slide-left-appear.app-slide-left-appear-active,
-.app-slide-left-enter.app-slide-left-enter-active {
-  animation-name: enter;
-  animation-play-state: running;
-}
-
-.app-slide-left-leave {
-  animation-name: leave;
-  animation-play-state: paused;
-  animation-fill-mode: both;
-}
-
-.app-slide-left-leave-active {
-  animation-name: leave;
-  animation-play-state: running;
-}
-
-@keyframes enter {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes leave {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-} */
-/* app/styles/animations.css */
-/* --- Khi Modal mở (enter) --- */
 .app-slide-left-enter {
   transform: translateX(100%);
 }
@@ -164,8 +116,7 @@
 }
 .custom-modal-height .ant-modal-content {
   height: calc(100vh - 46px);
-
-  overflow-y: auto;
+  overflow-y: auto !important;
   background-color: #f8f9fa !important;
 }
 .ant-modal-content {
@@ -174,4 +125,18 @@
 }
 .ant-modal-confirm-paragraph {
   max-width: 100% !important;
+}
+
+.ant-picker-content {
+  text-align: center !important;
+}
+
+.__bg-danger {
+  background: linear-gradient(111deg, #fab534 5.5%, #f64f39 92.45%);
+}
+.__bg-primary {
+  background: linear-gradient(90deg, #21d4fd 5.6%, #2152ff 96.47%);
+}
+.__bg-success {
+  background: linear-gradient(96deg, #82e12f 5.41%, #2cb735 93.74%);
 }

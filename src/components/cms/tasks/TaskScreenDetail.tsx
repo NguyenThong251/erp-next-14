@@ -4,8 +4,8 @@ import TabBarScreenDetail from "./TabBarScreenDetail";
 export default function TaskScreenDetail({ onClose }: { onClose: () => void }) {
   return (
     <div>
-      <div className="flex flex-col gap-5">
-        <header className=" bg-[#fff]">
+      <div className="flex flex-col gap-5 ">
+        <header className=" bg-[#fff] sticky top-0 z-10">
           <div className=" px-5 py-[10px]  flex items-center justify-between">
             <div className="flex items-center gap-[15px]">
               <button onClick={onClose}>
