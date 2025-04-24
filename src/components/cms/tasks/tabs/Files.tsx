@@ -74,6 +74,7 @@ export default function Files() {
             afterOpenChange: (visible) => !visible && setPreviewImage(""),
           }}
           src={previewImage}
+          alt="img"
         />
       )}
     </div>

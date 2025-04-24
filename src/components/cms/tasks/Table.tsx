@@ -213,7 +213,12 @@ const TableComponent: React.FC = () => {
           showTotal: (total) => `Tổng ${total}`,
         }}
         onChange={onChange}
-        onRow={(record) => ({
+        // onRow={(record) => ({
+        //   // onClick: () => handleRowClick(record),
+        //   onClick: () => showModal(),
+        //   style: { cursor: "pointer" },
+        // })}
+        onRow={() => ({
           // onClick: () => handleRowClick(record),
           onClick: () => showModal(),
           style: { cursor: "pointer" },
