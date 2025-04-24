@@ -122,3 +122,56 @@
     transform: translateX(100%);
   }
 }
+/*  */
+.app-zoom-enter {
+  transform: scale(0.8) !important;
+  opacity: 0;
+}
+.app-zoom-enter-active {
+  animation: zoomIn 0.2s ease-out forwards !important;
+}
+
+/* Zoom Out khi đóng modal */
+.app-zoom-leave {
+  transform: scale(1);
+  opacity: 1;
+}
+.app-zoom-leave-active {
+  animation: zoomOut 0.2s ease-in forwards;
+}
+
+/* Keyframes */
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+.custom-modal-height .ant-modal-content {
+  height: calc(100vh - 46px);
+
+  overflow-y: auto;
+  background-color: #f8f9fa !important;
+}
+.ant-modal-content {
+  border-radius: 16px !important;
+  padding: 0px !important;
+}
+.ant-modal-confirm-paragraph {
+  max-width: 100% !important;
+}

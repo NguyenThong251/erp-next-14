@@ -1,11 +1,11 @@
 "use client";
-import React, { useState } from "react";
-import { Table, Tag, Avatar } from "antd";
+import React, { useRef, useState } from "react";
+import { Table, Tag, Avatar, App } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { DataTasks } from "@/types/tasks/tasks.interface";
 import { mockTasks } from "@/lib/data/TaskData";
 import { UserOutlined } from "@ant-design/icons";
-import { useTaskStore } from "@/stores/task";
+import TaskDetail from "./TaskDetail";
 
 const columns: TableColumnsType<DataTasks> = [
   {
@@ -61,8 +61,8 @@ const columns: TableColumnsType<DataTasks> = [
                 y2="7.53587"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#82E12F" />
-                <stop offset="1" stopColor="#2CB735" />
+                <stop stop-color="#82E12F" />
+                <stop offset="1" stop-color="#2CB735" />
               </linearGradient>
             </defs>
           </svg>
@@ -160,7 +160,6 @@ const columns: TableColumnsType<DataTasks> = [
 
 const TableComponent: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const { openDrawer } = useTaskStore();
 
   const onChange: TableProps<DataTasks>["onChange"] = (
     pagination,
@@ -170,7 +169,26 @@ const TableComponent: React.FC = () => {
   ) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+  const { modal } = App.useApp();
+  const modalRef = useRef<{ destroy: () => void } | null>(null);
 
+  const showModal = () => {
+    modalRef.current = modal.info({
+      content: <TaskDetail onClose={() => modalRef.current?.destroy()} />,
+      width: 678,
+      transitionName: "app-zoom",
+      // className: "custom-modal-height",
+      footer: null,
+      icon: null,
+      centered: false,
+      style: {
+        top: 24,
+        right: 16,
+        position: "fixed",
+        margin: 0,
+      },
+    });
+  };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -180,11 +198,6 @@ const TableComponent: React.FC = () => {
     selectedRowKeys,
     onChange: onSelectChange,
     type: "checkbox" as const,
-  };
-
-  const handleRowClick = (record: DataTasks) => {
-    const taskId = record.taskName;
-    openDrawer(taskId, record);
   };
 
   return (
@@ -201,7 +214,8 @@ const TableComponent: React.FC = () => {
         }}
         onChange={onChange}
         onRow={(record) => ({
-          onClick: () => handleRowClick(record),
+          // onClick: () => handleRowClick(record),
+          onClick: () => showModal(),
           style: { cursor: "pointer" },
         })}
         className="bg-white rounded-lg shadow-sm"

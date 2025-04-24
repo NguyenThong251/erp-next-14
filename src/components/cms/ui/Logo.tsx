@@ -41,9 +41,9 @@ export default function Logo({ collapsed }: LogoProps) {
             y2="1"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#E0E1E2" stopOpacity="0" />
-            <stop offset="0.5" stopColor="#E0E1E2" />
-            <stop offset="1" stopColor="#E0E1E2" stopOpacity="0.15625" />
+            <stop stop-color="#E0E1E2" stopOpacity="0" />
+            <stop offset="0.5" stop-color="#E0E1E2" />
+            <stop offset="1" stop-color="#E0E1E2" stopOpacity="0.15625" />
           </linearGradient>
         </defs>
       </svg> */}
