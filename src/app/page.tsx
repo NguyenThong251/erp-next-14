@@ -1,6 +1,9 @@
 "use client";
 import TaskDetail from "@/components/cms/tasks/TaskDetail";
+import useAuthStore from "@/stores/auth";
 import { App, Button, Space } from "antd";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 export default function Home() {
@@ -24,6 +27,9 @@ export default function Home() {
       },
     });
   };
+  const { clearAuth } = useAuthStore();
+
+  const router = useRouter();
   return (
     <>
       <Space wrap>
@@ -31,6 +37,26 @@ export default function Home() {
           Open modal
         </Button>
       </Space>
+      {/* {isLoggedIn ? (
+        <button
+          onClick={() => {
+            clearAuth();
+            router.push("/login");
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded"
+        >
+          Logout
+        </button>
+      ) : (
+      )} */}
+      <>
+        <Link href="/login" className="mr-4 text-blue-500">
+          Login
+        </Link>
+        <Link href="/register" className="text-blue-500">
+          Register
+        </Link>
+      </>
     </>
   );
 }
