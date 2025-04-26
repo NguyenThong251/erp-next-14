@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { Table, Tag, Avatar, App } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Table, Tag, Avatar, App, Empty } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { DataTasks } from "@/types/tasks.interface";
 import { UserOutlined } from "@ant-design/icons";
@@ -9,6 +9,9 @@ import { tasksService } from "@/app/tasks/tasks.service";
 
 interface TableComponentProps {
   data: DataTasks[];
+  lastPage: number;
+  currentPage: number;
+  perPage: number;
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -149,55 +152,91 @@ const columns: TableColumnsType<DataTasks> = [
 
 const TableComponent: React.FC<TableComponentProps> = ({
   data,
-  page,
   totalPages,
+  lastPage,
+  currentPage,
+  perPage,
   onPageChange,
 }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-  console.log(data);
-  const onChange: TableProps<DataTasks>["onChange"] = (
-    pagination,
-    filters,
-    sorter,
-    extra
-  ) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  const [modalLoading, setModalLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(!data || data.length === 0);
   const { modal } = App.useApp();
   const modalRef = useRef<{ destroy: () => void } | null>(null);
+  const [modalInstance, setModalInstance] = useState<any>(null); // Thêm state này
+
+  useEffect(() => {
+    setTableLoading(!data || data.length === 0);
+  }, [data]);
 
   const showModal = async (taskId: number) => {
+    // Tạo modal mới mỗi lần click
+    const instance = modal.info({
+      content: (
+        <TaskDetail
+          task={null}
+          loading={true}
+          onClose={() => {
+            instance.destroy();
+            setModalInstance(null); // Reset modalInstance khi đóng
+          }}
+        />
+      ),
+      width: 678,
+      transitionName: "app-slide",
+      className: "custom-modal-height",
+      footer: null,
+      icon: null,
+      centered: false,
+      style: {
+        top: 24,
+        right: 16,
+        position: "fixed",
+        margin: 0,
+      },
+    });
+
+    setModalInstance(instance);
+    modalRef.current = instance;
+
     try {
       const taskDetail = await tasksService.getTaskDetail(taskId);
-      modalRef.current = modal.info({
+      
+      instance.update({
         content: (
           <TaskDetail
             task={taskDetail}
-            onClose={() => modalRef.current?.destroy()}
+            loading={false}
+            onClose={() => {
+              instance.destroy();
+              setModalInstance(null); // Reset modalInstance khi đóng
+            }}
           />
         ),
-        width: 678,
-        transitionName: "app-slide",
-        className: "custom-modal-height",
-        footer: null,
-        icon: null,
-        centered: false,
-        style: {
-          top: 24,
-          right: 16,
-          position: "fixed",
-          margin: 0,
-        },
       });
     } catch (error) {
       console.error("Error fetching task detail:", error);
+      instance.update({
+        content: (
+          <TaskDetail
+            task={null}
+            error="Không thể tải dữ liệu. Vui lòng thử lại."
+            loading={false}
+            onClose={() => {
+              instance.destroy(); 
+              setModalInstance(null); // Reset modalInstance khi đóng
+            }}
+          />
+        ),
+      });
     }
   };
 
   return (
     <div className="overflow-y-hidden overscroll-y-none [&_.ant-table-thead]:sticky [&_.ant-table-thead]:top-0 [&_.ant-table-thead]:z-10 [&_.ant-table-thead]:bg-white [&_.ant-table]:w-full [&_.ant-table]:min-w-[800px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <Table<DataTasks>
+         
+        // loading={tableLoading || modalLoading}
         rowSelection={{
           selectedRowKeys,
           onChange: (selectedKeys) => {
@@ -207,20 +246,23 @@ const TableComponent: React.FC<TableComponentProps> = ({
         columns={columns}
         dataSource={data}
         pagination={{
-          current: page,
+          current: currentPage,
           total: totalPages,
-          pageSize: 8,
+          pageSize: perPage,
           showSizeChanger: false,
-          showTotal: (total) => `Tổng ${total}`,
+          showTotal: (totalPages) => `Tổng ${totalPages}`,
           onChange: onPageChange,
         }}
         onRow={(record) => ({
           onClick: () => showModal(record.id),
           style: { cursor: "pointer" },
         })}
+        className="bg-white rounded-lg shadow-sm"
+        scroll={{ x: "max-content", y: "calc(100vh - 500px)" }}
       />
     </div>
   );
 };
+
 
 export default TableComponent;

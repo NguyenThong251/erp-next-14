@@ -11,7 +11,7 @@ export const tasksService = {
   // Tìm kiếm tasks
   searchTasks: async (query: string, page: number = 1) => {
     const response = await api.get<TTasksResponse>("/tasks/search", {
-      params: { query, page }
+      params: { query, page },
     });
     return response.data;
   },
@@ -20,20 +20,22 @@ export const tasksService = {
   getTaskDetail: async (id: number) => {
     const response = await api.get<{ task: TTask }>(`/tasks/${id}`);
     const task = response.data.task;
-    
+
     // Xử lý file_urls
-    task.file_urls = typeof task.file_urls === "string" 
-      ? JSON.parse(task.file_urls) 
-      : task.file_urls || [];
+    task.file_urls =
+      typeof task.file_urls === "string"
+        ? JSON.parse(task.file_urls)
+        : task.file_urls || [];
 
     // Xử lý subtasks
-    task.subtasks = task.subtasks.map(subtask => ({
+    task.subtasks = task.subtasks.map((subtask) => ({
       ...subtask,
-      file_urls: typeof subtask.file_urls === "string"
-        ? JSON.parse(subtask.file_urls)
-        : subtask.file_urls || []
+      file_urls:
+        typeof subtask.file_urls === "string"
+          ? JSON.parse(subtask.file_urls)
+          : subtask.file_urls || [],
     }));
 
     return task;
-  }
+  },
 };

@@ -1,5 +1,5 @@
 "use client";
-import { Avatar, Badge, Layout, theme } from "antd";
+import { Avatar, Badge, Layout, Spin, theme } from "antd";
 import React, { useEffect, useState } from "react";
 
 import Sider from "antd/es/layout/Sider";
@@ -21,28 +21,32 @@ export default function LayoutBase({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // auth
   const { checkAuth, clearAuth, user } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const initAuth = async () => {
-      const isAuthenticated = await checkAuth();
-      const publicPaths = ["/login", "/register"];
-      const isPublicPath = publicPaths.some((path) =>
-        pathname?.startsWith(path)
-      );
+      setIsLoading(true);
+      try {
+        const isAuthenticated = await checkAuth();
+        const publicPaths = ["/login", "/register"];
+        const isPublicPath = publicPaths.some((path) =>
+          pathname?.startsWith(path)
+        );
 
-      if (!isAuthenticated && !isPublicPath) {
-        clearAuth();
-        router.push("/login");
+        if (!isAuthenticated && !isPublicPath) {
+          clearAuth();
+          router.push("/login");
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     initAuth();
   }, [pathname]);
-  // end auth
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [count] = useState<number>(5);
@@ -53,6 +57,14 @@ export default function LayoutBase({
   const toggleTheme = () => {
     setDarkTheme(!darkTheme);
   };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spin size="large"  />
+      </div>
+    );
+  }
+
   if (!user) return <>{children}</>;
   return (
     <div className="m-4">

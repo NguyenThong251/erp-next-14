@@ -1,5 +1,5 @@
 "use client";
-import { App, Badge, Tabs, TabsProps } from "antd";
+import { App, Badge, Spin, Tabs, TabsProps } from "antd";
 import { useRef, useState } from "react";
 import Comments from "./tabs/Comments";
 import Files from "./tabs/Files";
@@ -9,11 +9,13 @@ import { TTask } from "@/types";
 import Image from "next/image";
 
 interface TaskDetailProps {
-  task: TTask;
+  task: TTask | null;
   onClose: () => void;
+  loading?: boolean; 
+  error?: string; 
 }
 
-export default function TaskDetail({ task, onClose }: TaskDetailProps) {
+export default function TaskDetail({ task, onClose,loading = false, error }: TaskDetailProps) {
   const [activeKey, setActiveKey] = useState("1");
   const { modal } = App.useApp();
   const modalRef = useRef<{ destroy: () => void } | null>(null);
@@ -78,6 +80,15 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
       children: <Comments />,
     },
   ];
+  if (loading) {
+    return (
+      <>
+      <div className="flex items-center justify-center h-[400px]">
+          <Spin size="large" />
+        </div>
+      </>
+    ) 
+}else {
   return (
     <>
       <div className="flex flex-col gap-5 w-full p-5">
@@ -122,11 +133,11 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
           </div>
           <div className="flex items-center gap-[10px] px-[15px] py-[5px] rounded-[8px] border-[1px] border-[#E2E8F0">
             <span className="text-textColor text-[14px] font-[400] text-base/[14px]">
-              {task.status}
+              {task?.status }
             </span>
             <span>|</span>
             <div className="flex items-center gap-[5px]">
-              <span>{task.progress}%</span>
+              <span>{task?.progress}%</span>
             </div>
           </div>
           <div className="flex items-center gap-[15px]">
@@ -457,5 +468,5 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
         </div>
       </div>
     </>
-  );
+  ); }
 }

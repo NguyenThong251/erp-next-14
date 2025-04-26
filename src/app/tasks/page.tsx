@@ -1,13 +1,11 @@
 "use client";
 import TabBar from "@/components/cms/tasks/TabBar";
 import Table from "@/components/cms/tasks/Table";
-import React, { useState, useEffect } from "react";
-import { tasksService } from "./tasks.service";
-import { DataTasks, TTask } from "@/types";
-import { Input } from "antd";
-import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/auth";
-import { SearchOutlined } from "@ant-design/icons";
+import { DataTasks, TTask } from "@/types";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { tasksService } from "./tasks.service";
 
 const mapTaskToDataTask = (task: TTask): DataTasks => {
   return {
@@ -30,6 +28,9 @@ export default function TasksPage() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(1);
   const { token } = useAuthStore();
   const router = useRouter();
 
@@ -41,7 +42,10 @@ export default function TasksPage() {
     try {
       const data = await tasksService.getTasks(page);
       setTasks(data.tasks);
-      setTotalPages(data.last_page);
+      setTotalPages(data.total);
+      setLastPage(data.last_page);
+      setCurrentPage(data.current_page);
+      setPerPage(data.per_page);
     } catch (err: any) {
       if (err.response?.status === 401) {
         router.push("/login");
@@ -53,7 +57,10 @@ export default function TasksPage() {
     try {
       const data = await tasksService.searchTasks(query, page);
       setTasks(data.tasks);
-      setTotalPages(data.last_page);
+      setTotalPages(data.total);
+      setLastPage(data.last_page);
+      setCurrentPage(data.current_page);
+      setPerPage(data.per_page);
     } catch (err: any) {
       if (err.response?.status === 401) {
         router.push("/login");
@@ -99,19 +106,6 @@ export default function TasksPage() {
                   Lọc
                 </span>
               </div>
-              {/* <div className="w-[300px] flex items-center gap-3 border-[1px] h-[40px] rounded-[10px] border-[#E2E8F0] px-3 py-2">
-                <Input
-                  className="w-full focus:outline-none focus:border-none"
-                  placeholder="Tìm kiếm công việc"
-                  prefix={<SearchOutlined  className="text-drakGrey" />}
-                  value={query}
-                  onChange={(e) => {
-                    setQuery(e.target.value);
-                    setPage(1);
-                  }}
-                  onPressEnter={handleSearch}
-                />
-              </div> */}
               <div className="w-[300px] flex items-center gap-3 border-[1px] h-[40px] rounded-[10px] border-[#E2E8F0]  px-3 py-2 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -257,6 +251,9 @@ export default function TasksPage() {
             data={tasks.map(mapTaskToDataTask)}
             page={page}
             totalPages={totalPages}
+            lastPage={lastPage}
+            perPage={perPage}
+            currentPage={currentPage}
             onPageChange={setPage}
           />
         </div>
