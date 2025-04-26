@@ -1,21 +1,12 @@
 import { create } from "zustand";
 import axios from "axios";
 import Cookies from "js-cookie";
-
-interface TUser {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  avatar: string;
-  department_id: number;
-  created_at: string;
-  updated_at: string;
-}
+import { TUser } from "@/types";
 
 interface AuthState {
   token: string | null;
   user: TUser | null;
+  isAuthenticated: boolean;
   setAuth: (token: string, user: TUser) => void;
   clearAuth: () => void;
   checkAuth: () => Promise<boolean>;
@@ -24,52 +15,66 @@ interface AuthState {
 const useAuthStore = create<AuthState>((set) => ({
   token: null,
   user: null,
+  isAuthenticated: false,
   setAuth: (token: string, user: TUser) => {
     Cookies.set("token", token, { expires: 7 });
-    Cookies.set("user", JSON.stringify(user), { expires: 7 }); // Lưu user vào cookies
-    set({ token, user });
+    Cookies.set("user", JSON.stringify(user), { expires: 7 });
+    set({ token, user, isAuthenticated: true });
+
+    // Cấu hình axios default header khi có token
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
   },
   clearAuth: () => {
     Cookies.remove("token");
     Cookies.remove("user");
-    set({ token: null, user: null });
+    delete axios.defaults.headers.common["Authorization"];
+    set({ token: null, user: null, isAuthenticated: false });
   },
   checkAuth: async () => {
     const token = Cookies.get("token");
+    console.log(token);
     const userStr = Cookies.get("user");
+    console.log(userStr);
     let user: TUser | null = null;
 
-    // Khôi phục user từ cookies nếu có
-    if (userStr) {
-      try {
-        user = JSON.parse(userStr);
-        console.log("Parsed user from cookies:", user); // Debug
-      } catch (err) {
-        console.error("Failed to parse user from cookies:", err);
-        Cookies.remove("user");
-      }
+    if (!token || !userStr) {
+      set({ token: null, user: null, isAuthenticated: false });
+      return false;
     }
 
-    if (token) {
-      try {
-        await axios.get("http://localhost:8000/api/tasks", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        set({ token, user }); // Khôi phục token và user
-        console.log("checkAuth success:", { token, user }); // Debug
+    try {
+      user = JSON.parse(userStr);
+      if (token && user) {
+        set({ token, user, isAuthenticated: true });
+        // Cấu hình lại axios header
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         return true;
-      } catch (err) {
-        console.error("checkAuth failed:", err); // Debug
-        Cookies.remove("token");
-        Cookies.remove("user");
-        set({ token: null, user: null });
-        return false;
       }
+    } catch (err) {
+      console.error("Lỗi khi parse user từ cookies:", err);
+      Cookies.remove("token");
+      Cookies.remove("user");
+      delete axios.defaults.headers.common["Authorization"];
     }
 
-    set({ token: null, user: null });
+    set({ token: null, user: null, isAuthenticated: false });
     return false;
   },
 }));
+
+// Interceptor để xử lý token hết hạn
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      const store = useAuthStore.getState();
+      store.clearAuth();
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default useAuthStore;

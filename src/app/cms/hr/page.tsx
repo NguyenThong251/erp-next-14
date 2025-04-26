@@ -3,63 +3,15 @@ import { useState, useEffect } from "react";
 import useAuthStore from "@/stores/auth";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
+import {
+  TTask,
+  TTasksResponse,
+} from "@/types";
 
-interface User {
-  id: number;
-  name: string;
-  avatar: string;
-}
-
-interface Project {
-  id: number;
-  name: string;
-}
-
-interface Assignee {
-  id: number;
-  name: string;
-  pivot: { role: string };
-}
-
-interface Subtask {
-  id: number;
-  name: string;
-  status: string;
-  file_urls: string[];
-}
-
-interface Checklist {
-  id: number;
-  content: string;
-  is_completed: boolean;
-}
-
-interface Task {
-  id: number;
-  name: string;
-  description: string | null;
-  status: string;
-  priority: string;
-  progress: number;
-  due_date: string;
-  file_urls: string[];
-  creator: User;
-  project: Project | null;
-  assignees: Assignee[];
-  subtasks: Subtask[];
-  checklists: Checklist[];
-}
-
-interface TasksResponse {
-  tasks: Task[];
-  total: number;
-  current_page: number;
-  last_page: number;
-}
 
 export default function Page() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [tasks, setTasks] = useState<TTask[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TTask | null>(null);
   const [query, setQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -78,7 +30,7 @@ export default function Page() {
   const fetchTasks = async () => {
     if (!token) return;
     try {
-      const response = await api.get<TasksResponse>(`/tasks?page=${page}`);
+      const response = await api.get<TTasksResponse>(`/tasks?page=${page}`);
       setTasks(response.data.tasks);
       setTotalPages(response.data.last_page);
     } catch (err: any) {
@@ -91,7 +43,7 @@ export default function Page() {
   const handleSearch = async () => {
     if (!token) return;
     try {
-      const response = await api.get<TasksResponse>("/tasks/search", {
+      const response = await api.get<TTasksResponse>("/tasks/search", {
         params: { query, page },
       });
       setTasks(response.data.tasks);
@@ -107,7 +59,7 @@ export default function Page() {
   const fetchTaskDetails = async (id: number) => {
     if (!token) return;
     try {
-      const response = await api.get<{ task: Task }>(`/tasks/${id}`);
+      const response = await api.get<{ task: TTask }>(`/tasks/${id}`);
       const task = response.data.task;
       task.file_urls =
         typeof task.file_urls === "string"

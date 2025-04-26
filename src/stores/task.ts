@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { DataTasks } from "@/types/tasks/tasks.interface";
+import { DataTasks } from "@/types/tasks.interface";
 
 interface TaskStore {
   selectedTaskId: string | null;

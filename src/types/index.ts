@@ -1,1 +1,2 @@
-export * from "./tasks/tasks.interface";
+export * from "./tasks.interface";
+export * from "./users.interface";

@@ -21,13 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="en">
       <body className={roboto.className + " bg-[#F8F9FA]"}>
         <div className="m-4">
           <ConfigProvider theme={theme}>
             <AntdRegistry>
               <App>
-                <LayoutBase>{children}</LayoutBase>
+                {/* <LayoutBase>{children}</LayoutBase> */}
+                {children}
               </App>
             </AntdRegistry>
           </ConfigProvider>

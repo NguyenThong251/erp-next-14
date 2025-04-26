@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import { Table, Tag, Avatar, App } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { DataTasks } from "@/types/tasks/tasks.interface";
+import { DataTasks } from "@/types/tasks.interface";
 import { mockTasks } from "@/lib/data/TaskData";
 import { UserOutlined } from "@ant-design/icons";
 import TaskDetail from "./TaskDetail";

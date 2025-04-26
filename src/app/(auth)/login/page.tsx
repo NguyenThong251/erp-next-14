@@ -1,74 +1,154 @@
 "use client";
 import { useState } from "react";
 import useAuthStore from "@/stores/auth";
-import api from "@/lib/api";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-
-interface TUser {
-  id: number;
-  name: string;
+import { authService } from "../auth.service";
+import { Button, Card, Form, Input, notification } from "antd";
+interface LoginForm {
   username: string;
-  email: string;
-  avatar: string;
-  department_id: number;
-  created_at: string;
-  updated_at: string;
-}
-interface LoginResponse {
-  token: string;
-  user: TUser;
+  password: string;
 }
 
 export default function Login() {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const { setAuth } = useAuthStore();
   const router = useRouter();
+  const [form] = Form.useForm();
 
-  const handleLogin = async () => {
+  const handleLogin = async (values: LoginForm) => {
+    setLoading(true);
     try {
-      const response = await api.post<LoginResponse>("/login", {
-        username: username,
-        password: password,
-      });
-      console.log(response.data);
-      const { token, user } = response.data;
+      const { token, user } = await authService.login(
+        values.username,
+        values.password
+      );
       if (token) {
         setAuth(token, user);
-        router.push("/hr");
-      } else {
-        setError("Login failed: No token received");
+        notification.success({
+          message: "Đăng nhập thành công",
+          description: "Chào mừng bạn quay trở lại!",
+          placement: "topRight",
+        });
+        router.push("/cms/hr");
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      notification.error({
+        message: "Đăng nhập thất bại",
+        description:
+          err.response?.data?.message ||
+          "Vui lòng kiểm tra lại thông tin đăng nhập",
+        placement: "topRight",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Login</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <input
-        type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        className="border p-2 rounded w-full mb-4"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="border p-2 rounded w-full mb-4"
-      />
-      <button
-        onClick={handleLogin}
-        className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-      >
-        Login
-      </button>
-    </div>
+    <>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md shadow-lg rounded-lg">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800">Đăng nhập</h2>
+            <p className="mt-2 text-gray-600">Vui lòng đăng nhập để tiếp tục</p>
+          </div>
+
+          <Form
+            form={form}
+            name="login"
+            onFinish={handleLogin}
+            layout="vertical"
+            size="large"
+          >
+            <Form.Item
+              name="username"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên đăng nhập!" },
+              ]}
+            >
+              <Input
+                prefix={<UserOutlined className="text-gray-400" />}
+                placeholder="Tên đăng nhập"
+                className="rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+            >
+              <Input.Password
+                prefix={<LockOutlined className="text-gray-400" />}
+                placeholder="Mật khẩu"
+                className="rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                className="w-full bg-blue-500 hover:bg-blue-600 rounded-lg h-12 text-lg"
+              >
+                Đăng nhập
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </div>{" "}
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md shadow-lg rounded-lg">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800">Đăng nhập</h2>
+            <p className="mt-2 text-gray-600">Vui lòng đăng nhập để tiếp tục</p>
+          </div>
+
+          <Form
+            form={form}
+            name="login"
+            onFinish={handleLogin}
+            layout="vertical"
+            size="large"
+          >
+            <Form.Item
+              name="username"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên đăng nhập!" },
+              ]}
+            >
+              <Input
+                prefix={<UserOutlined className="text-gray-400" />}
+                placeholder="Tên đăng nhập"
+                className="rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+            >
+              <Input.Password
+                prefix={<LockOutlined className="text-gray-400" />}
+                placeholder="Mật khẩu"
+                className="rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                className="w-full bg-blue-500 hover:bg-blue-600 rounded-lg h-12 text-lg"
+              >
+                Đăng nhập
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </div>
+    </>
   );
 }

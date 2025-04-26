@@ -1,4 +1,4 @@
-import { DataTasks } from "@/types/tasks/tasks.interface";
+import { DataTasks } from "@/types/tasks.interface";
 
 export const mockTasks: DataTasks[] = [
   {
