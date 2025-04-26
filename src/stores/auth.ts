@@ -22,16 +22,12 @@ const useAuthStore = create<AuthState>()(
       error: null,
 
       setAuth: (token: string, user: TUser) => {
-        // Chỉ cần set state, zustand/persist sẽ tự động lưu vào localStorage
         set({ token, user });
-        // Cập nhật header cho API calls
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       },
 
       clearAuth: () => {
-        // Reset state
         set({ token: null, user: null });
-        // Xóa header authorization
         delete api.defaults.headers.common["Authorization"];
       },
 
@@ -43,7 +39,6 @@ const useAuthStore = create<AuthState>()(
             return false;
           }
 
-          // Cập nhật lại header cho API calls khi reload
           api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
           return true;
         } catch (error) {
@@ -53,8 +48,8 @@ const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage", // Tên của storage key trong localStorage
-      partialize: (state) => ({ token: state.token, user: state.user }), // Chỉ lưu token và user
+      name: "auth-storage", 
+      partialize: (state) => ({ token: state.token, user: state.user }), 
     }
   )
 );
