@@ -14,12 +14,20 @@ export const authService = {
     });
     return response.data;
   },
-  register: async (name: string, username: string, password: string) => {
-    const response = await api.post("/register", {
+
+  register: async (name: string, username: string, password: string): Promise<void> => {
+    await api.post("/register", {
       name,
       username,
       password,
     });
-    return response.data;
   },
+
+  logout: async (): Promise<void> => {
+    try {
+      await api.post("/logout");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  }
 };

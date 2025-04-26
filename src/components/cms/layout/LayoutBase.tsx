@@ -1,6 +1,6 @@
 "use client";
 import { Avatar, Badge, Layout, theme } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Sider from "antd/es/layout/Sider";
 import Logo from "../ui/Logo";
@@ -12,12 +12,38 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import ToggleThemeButton from "./ToggleThemeButton";
+import useAuthStore from "@/stores/auth";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LayoutBase({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+  // auth
+  const { checkAuth, clearAuth } = useAuthStore();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const initAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      console.log('isAuthenticated', isAuthenticated);
+      const publicPaths = ['/login', '/register'];
+      const isPublicPath = publicPaths.some(path => pathname?.startsWith(path));
+
+      if (!isAuthenticated && !isPublicPath) {
+        clearAuth();
+        router.push('/login');
+      }
+    };
+
+    initAuth();
+  }, [pathname]);
+  // end auth
   const [darkTheme, setDarkTheme] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [count] = useState<number>(5);

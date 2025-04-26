@@ -30,7 +30,7 @@ export default function Login() {
           description: "Chào mừng bạn quay trở lại!",
           placement: "topRight",
         });
-        router.push("/cms/hr");
+        router.push("/hr");
       }
     } catch (err: any) {
       notification.error({

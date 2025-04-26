@@ -1,29 +1,25 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+const publicPaths = ["/login", "/register", "/forgot-password"];
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   const token = request.cookies.get("token")?.value;
 
-  // Các routes cần xác thực
-  const protectedPaths = ["/hr", "/dashboard"];
-  
-  // Các routes không cần xác thực
-  const publicPaths = ["/login", "/register"];
-
-  const isProtectedRoute = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  const isPublicRoute = publicPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
-
-  if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // Cho phép truy cập các public path mà không cần xác thực
+  if (publicPaths.some(path => pathname.startsWith(path))) {
+    // Nếu đã đăng nhập và cố truy cập trang login/register, chuyển về trang chủ
+    if (token) {
+      return NextResponse.redirect(new URL("/cms/hr", request.url));
+    }
+    return NextResponse.next();
   }
 
-  if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL("/hr", request.url));
+  // Kiểm tra xác thực cho các route khác
+  if (!token) {
+    const url = new URL("/login", request.url);
+    url.searchParams.set("from", pathname);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

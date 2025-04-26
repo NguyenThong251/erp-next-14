@@ -28,8 +28,7 @@ export default function RootLayout({
           <ConfigProvider theme={theme}>
             <AntdRegistry>
               <App>
-                {/* <LayoutBase>{children}</LayoutBase> */}
-                {children}
+                <LayoutBase>{children}</LayoutBase>
               </App>
             </AntdRegistry>
           </ConfigProvider>
