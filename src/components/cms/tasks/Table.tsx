@@ -3,9 +3,16 @@ import React, { useRef, useState } from "react";
 import { Table, Tag, Avatar, App } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { DataTasks } from "@/types/tasks.interface";
-import { mockTasks } from "@/lib/data/TaskData";
 import { UserOutlined } from "@ant-design/icons";
 import TaskDetail from "./TaskDetail";
+import { tasksService } from "@/app/tasks/tasks.service";
+
+interface TableComponentProps {
+  data: DataTasks[];
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
 const columns: TableColumnsType<DataTasks> = [
   {
@@ -110,25 +117,7 @@ const columns: TableColumnsType<DataTasks> = [
     dataIndex: "status",
     sorter: (a, b) => a.status.localeCompare(b.status),
     render: (status) => {
-      const statusConfig: Record<string, { color: string; textColor: string }> =
-        {
-          "Đang hoạt động": { color: "#E8F5E9", textColor: "#2E7D32" },
-          "Chờ duyệt": { color: "#FFF3E0", textColor: "#EF6C00" },
-          "Hoàn thành": { color: "#E3F2FD", textColor: "#1565C0" },
-        };
-      const config = statusConfig[status] || {
-        color: "#F5F5F5",
-        textColor: "#616161",
-      };
-      return (
-        <Tag
-          color={config.color}
-          className="border-0 rounded-[16px] px-3 py-1"
-          style={{ color: config.textColor }}
-        >
-          {status}
-        </Tag>
-      );
+      return <span className="text-[14px] text-[#344767]">{status}</span>;
     },
   },
   {
@@ -158,9 +147,15 @@ const columns: TableColumnsType<DataTasks> = [
   },
 ];
 
-const TableComponent: React.FC = () => {
+const TableComponent: React.FC<TableComponentProps> = ({
+  data,
+  page,
+  totalPages,
+  onPageChange,
+}) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
+  console.log(data);
   const onChange: TableProps<DataTasks>["onChange"] = (
     pagination,
     filters,
@@ -172,59 +167,57 @@ const TableComponent: React.FC = () => {
   const { modal } = App.useApp();
   const modalRef = useRef<{ destroy: () => void } | null>(null);
 
-  const showModal = () => {
-    modalRef.current = modal.info({
-      content: <TaskDetail onClose={() => modalRef.current?.destroy()} />,
-      width: 678,
-      transitionName: "app-zoom",
-      // className: "custom-modal-height",
-      footer: null,
-      icon: null,
-      centered: false,
-      style: {
-        top: 24,
-        right: 16,
-        position: "fixed",
-        margin: 0,
-      },
-    });
-  };
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    type: "checkbox" as const,
+  const showModal = async (taskId: number) => {
+    try {
+      const taskDetail = await tasksService.getTaskDetail(taskId);
+      modalRef.current = modal.info({
+        content: (
+          <TaskDetail
+            task={taskDetail}
+            onClose={() => modalRef.current?.destroy()}
+          />
+        ),
+        width: 678,
+        transitionName: "app-slide",
+        className: "custom-modal-height",
+        footer: null,
+        icon: null,
+        centered: false,
+        style: {
+          top: 24,
+          right: 16,
+          position: "fixed",
+          margin: 0,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching task detail:", error);
+    }
   };
 
   return (
-    <div className=" overflow-y-hidden overscroll-y-none [&_.ant-table-thead]:sticky [&_.ant-table-thead]:top-0 [&_.ant-table-thead]:z-10 [&_.ant-table-thead]:bg-white [&_.ant-table]:w-full [&_.ant-table]:min-w-[800px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="overflow-y-hidden overscroll-y-none [&_.ant-table-thead]:sticky [&_.ant-table-thead]:top-0 [&_.ant-table-thead]:z-10 [&_.ant-table-thead]:bg-white [&_.ant-table]:w-full [&_.ant-table]:min-w-[800px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <Table<DataTasks>
-        rowSelection={rowSelection}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (selectedKeys) => {
+            setSelectedRowKeys(selectedKeys);
+          },
+        }}
         columns={columns}
-        dataSource={mockTasks}
+        dataSource={data}
         pagination={{
-          total: mockTasks.length,
-          pageSize: 10,
+          current: page,
+          total: totalPages,
+          pageSize: 8,
           showSizeChanger: false,
           showTotal: (total) => `Tổng ${total}`,
+          onChange: onPageChange,
         }}
-        onChange={onChange}
-        // onRow={(record) => ({
-        //   // onClick: () => handleRowClick(record),
-        //   onClick: () => showModal(),
-        //   style: { cursor: "pointer" },
-        // })}
-        onRow={() => ({
-          // onClick: () => handleRowClick(record),
-          onClick: () => showModal(),
+        onRow={(record) => ({
+          onClick: () => showModal(record.id),
           style: { cursor: "pointer" },
         })}
-        className="bg-white rounded-lg shadow-sm"
-        scroll={{ x: "max-content", y: "calc(100vh - 500px)" }}
       />
     </div>
   );

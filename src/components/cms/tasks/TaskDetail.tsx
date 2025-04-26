@@ -1,13 +1,19 @@
 "use client";
 import { App, Badge, Tabs, TabsProps } from "antd";
-import Image from "next/image";
 import { useRef, useState } from "react";
 import Comments from "./tabs/Comments";
 import Files from "./tabs/Files";
 import Progress from "./tabs/Progress";
 import TaskScreenDetail from "./TaskScreenDetail";
+import { TTask } from "@/types";
+import Image from "next/image";
 
-export default function TaskDetail({ onClose }: { onClose: () => void }) {
+interface TaskDetailProps {
+  task: TTask;
+  onClose: () => void;
+}
+
+export default function TaskDetail({ task, onClose }: TaskDetailProps) {
   const [activeKey, setActiveKey] = useState("1");
   const { modal } = App.useApp();
   const modalRef = useRef<{ destroy: () => void } | null>(null);
@@ -116,23 +122,11 @@ export default function TaskDetail({ onClose }: { onClose: () => void }) {
           </div>
           <div className="flex items-center gap-[10px] px-[15px] py-[5px] rounded-[8px] border-[1px] border-[#E2E8F0">
             <span className="text-textColor text-[14px] font-[400] text-base/[14px]">
-              Hoàn thành
+              {task.status}
             </span>
             <span>|</span>
             <div className="flex items-center gap-[5px]">
-              <span>50%</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="11"
-                height="8"
-                viewBox="0 0 11 8"
-                fill="none"
-              >
-                <path
-                  d="M4.88213 6.80685C5.22393 7.14864 5.779 7.14864 6.1208 6.80685L10.4958 2.43185C10.8376 2.09005 10.8376 1.53497 10.4958 1.19318C10.154 0.851379 9.59893 0.851379 9.25713 1.19318L5.5001 4.95021L1.74307 1.19591C1.40127 0.854114 0.846191 0.854114 0.504395 1.19591C0.162598 1.53771 0.162598 2.09279 0.504395 2.43458L4.87939 6.80958L4.88213 6.80685Z"
-                  fill="#A0AEC0"
-                />
-              </svg>
+              <span>{task.progress}%</span>
             </div>
           </div>
           <div className="flex items-center gap-[15px]">

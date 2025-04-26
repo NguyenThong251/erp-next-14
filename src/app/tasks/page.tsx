@@ -1,19 +1,85 @@
 "use client";
 import TabBar from "@/components/cms/tasks/TabBar";
 import Table from "@/components/cms/tasks/Table";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { tasksService } from "./tasks.service";
+import { DataTasks, TTask } from "@/types";
+import { Input } from "antd";
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/stores/auth";
+import { SearchOutlined } from "@ant-design/icons";
+
+const mapTaskToDataTask = (task: TTask): DataTasks => {
+  return {
+    key: task.id,
+    taskName: task.name,
+    department: task.assignees[0]?.pivot.role || "N/A",
+    project: task.project?.name || "N/A",
+    startDate: new Date().toLocaleDateString(), // Since TTask doesn't have startDate
+    dueDate: new Date(task.due_date).toLocaleDateString(),
+    status: task.status,
+    condition: `${task.progress}% completed`,
+    members: task.assignees.map((a) => a.name),
+    id: task.id, // Adding id for click handler
+  };
+};
 
 export default function TasksPage() {
   const [activeTab, setActiveTab] = useState<"Ngày" | "Tháng" | "Năm">("Ngày");
+  const [tasks, setTasks] = useState<TTask[]>([]);
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const { token } = useAuthStore();
+  const router = useRouter();
 
   const handleTabClick = (tab: "Ngày" | "Tháng" | "Năm") => {
     setActiveTab(tab);
   };
+
+  const fetchTasks = async () => {
+    try {
+      const data = await tasksService.getTasks(page);
+      setTasks(data.tasks);
+      setTotalPages(data.last_page);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        router.push("/login");
+      }
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      const data = await tasksService.searchTasks(query, page);
+      setTasks(data.tasks);
+      setTotalPages(data.last_page);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        router.push("/login");
+      }
+    }
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+  useEffect(() => {
+    if (token) {
+      if (query) {
+        handleSearch();
+      } else {
+        fetchTasks();
+      }
+    }
+  }, [page, query, token]);
+
   return (
     <>
       <div className="flex flex-col gap-[16px]">
         <TabBar />
-        <div className="bg-[#fff] p-5 rounded-[16px]  flex flex-col gap-4 ">
+        <div className="bg-[#fff] p-5 rounded-[16px] flex flex-col gap-4">
           <div className=" flex items-center justify-between ">
             <div className="flex justify-between items-center gap-5">
               <div className="flex items-center gap-3 bg-[#F3F5F9] rounded-[10px] px-3 py-2 h-[40px]">
@@ -33,6 +99,19 @@ export default function TasksPage() {
                   Lọc
                 </span>
               </div>
+              {/* <div className="w-[300px] flex items-center gap-3 border-[1px] h-[40px] rounded-[10px] border-[#E2E8F0] px-3 py-2">
+                <Input
+                  className="w-full focus:outline-none focus:border-none"
+                  placeholder="Tìm kiếm công việc"
+                  prefix={<SearchOutlined  className="text-drakGrey" />}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setPage(1);
+                  }}
+                  onPressEnter={handleSearch}
+                />
+              </div> */}
               <div className="w-[300px] flex items-center gap-3 border-[1px] h-[40px] rounded-[10px] border-[#E2E8F0]  px-3 py-2 ">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +141,12 @@ export default function TasksPage() {
                   className="w-full focus:outline-none focus:border-none"
                   type="text"
                   placeholder="Tìm kiếm công việc"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setPage(1);
+                  }}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
             </div>
@@ -168,7 +253,12 @@ export default function TasksPage() {
               </div>
             </div>
           </div>
-          <Table />
+          <Table
+            data={tasks.map(mapTaskToDataTask)}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </div>
       </div>
     </>

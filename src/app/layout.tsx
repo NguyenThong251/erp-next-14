@@ -20,14 +20,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const {checkAuth} = useAuthStore();
   return (
-    
     <html lang="en">
       <body className={roboto.className + " bg-[#F8F9FA]"}>
-        <div className="m-4">
+        <div>
           <ConfigProvider theme={theme}>
             <AntdRegistry>
               <App>
+                {/* {checkAuth ? <LayoutBase>{children}</LayoutBase> :<>{children}</>} */}
                 <LayoutBase>{children}</LayoutBase>
               </App>
             </AntdRegistry>

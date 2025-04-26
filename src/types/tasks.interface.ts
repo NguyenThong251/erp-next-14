@@ -8,7 +8,8 @@ export interface DataTasks {
     status: string;
     condition: string;
     members: string[];
-  }
+    id: number; // Add this field for click handler
+}
 
   // 
  export interface TUserTask {
@@ -56,7 +57,65 @@ export  interface TSubtask {
     subtasks: TSubtask[];
     checklists: TChecklist[];
   }
-  
+  export interface TTaskDetail {
+    id: number;
+    name: string;
+    description: string;
+    start_date: string;
+    due_date: string;
+    estimated_time: string;
+    status: string;
+    priority: string;
+    progress: number;
+    file_urls: string[] | string;
+    creator_id: number;
+    project_id: number;
+    created_at: string;
+    updated_at: string;
+    creator: {
+      id: number;
+      username: string;
+      name: string;
+      email: string;
+      avatar: string;
+      department_id: number;
+    };
+    project: {
+      id: number;
+      name: string;
+      description: string;
+    };
+    assignees: Array<{
+      id: number;
+      username: string;
+      name: string;
+      email: string;
+      avatar: string;
+      department_id: number;
+      pivot: {
+        task_id: number;
+        user_id: number;
+        role: string;
+      };
+    }>;
+    subtasks: Array<{
+      id: number;
+      name: string;
+      description: string;
+      due_date: string;
+      status: string;
+      file_urls: string[] | null;
+      task_id: number;
+      user_id: number;
+    }>;
+    checklists: Array<{
+      id: number;
+      content: string;
+      is_completed: boolean;
+      task_id: number;
+      subtask_id: number | null;
+    }>;
+  }
  export interface TTasksResponse {
     tasks: TTask[];
     total: number;
