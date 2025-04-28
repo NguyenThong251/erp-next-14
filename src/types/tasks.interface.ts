@@ -26,6 +26,8 @@ export interface TProject {
 export interface TAssignee {
   id: number;
   name: string;
+  avatar: string;
+  username: string;
   pivot: { role: string };
 }
 
@@ -33,7 +35,9 @@ export interface TSubtask {
   id: number;
   name: string;
   status: string;
+  due_date: string;
   file_urls: string[];
+  user: TUserTask;
 }
 
 export interface TChecklist {
@@ -47,9 +51,9 @@ export interface TTask {
   name: string;
   description: string | null;
   status: string;
-  priority: string;
-  progress: number;
-  due_date: string;
+  priority: "urgent" | "normal";
+  progress: number ;
+  due_date?: string;
   file_urls: string[];
   creator: TUserTask;
   project: TProject | null;

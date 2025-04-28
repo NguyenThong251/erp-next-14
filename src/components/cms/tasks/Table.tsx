@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { Table, Tag, Avatar, App, Empty } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import { tasksService } from "@/app/tasks/tasks.service";
 import { DataTasks } from "@/types/tasks.interface";
 import { UserOutlined } from "@ant-design/icons";
+import type { TableColumnsType } from "antd";
+import { App, Avatar, Table } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import TaskDetail from "./TaskDetail";
-import { tasksService } from "@/app/tasks/tasks.service";
 
 interface TableComponentProps {
   data: DataTasks[];
@@ -170,6 +170,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
   }, [data]);
 
   const showModal = async (taskId: number) => {
+    setModalLoading(true);
     // Tạo modal mới mỗi lần click
     const instance = modal.info({
       content: (
@@ -201,7 +202,7 @@ const TableComponent: React.FC<TableComponentProps> = ({
 
     try {
       const taskDetail = await tasksService.getTaskDetail(taskId);
-      
+      console.log("hello");
       instance.update({
         content: (
           <TaskDetail
@@ -223,19 +224,20 @@ const TableComponent: React.FC<TableComponentProps> = ({
             error="Không thể tải dữ liệu. Vui lòng thử lại."
             loading={false}
             onClose={() => {
-              instance.destroy(); 
+              instance.destroy();
               setModalInstance(null); // Reset modalInstance khi đóng
             }}
           />
         ),
       });
+    } finally {
+      setModalLoading(false);
     }
   };
 
   return (
     <div className="overflow-y-hidden overscroll-y-none [&_.ant-table-thead]:sticky [&_.ant-table-thead]:top-0 [&_.ant-table-thead]:z-10 [&_.ant-table-thead]:bg-white [&_.ant-table]:w-full [&_.ant-table]:min-w-[800px] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       <Table<DataTasks>
-         
         // loading={tableLoading || modalLoading}
         rowSelection={{
           selectedRowKeys,
@@ -263,6 +265,5 @@ const TableComponent: React.FC<TableComponentProps> = ({
     </div>
   );
 };
-
 
 export default TableComponent;
